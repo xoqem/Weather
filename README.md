@@ -19,4 +19,4 @@ Building:
 
     grunt
 
-5. You can run the app by loading the index.html file in either tmp/debug or tmp/release.  Compressed release and debug packages can be found in the dist folder after building.
+5. Run the app by loading the index.html file in either tmp/debug or tmp/release.  Compressed release and debug packages can be found in the dist folder after building.
