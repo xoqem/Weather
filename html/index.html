@@ -16,13 +16,24 @@
     <section id="weatherapp">
       <header id="header">
         <h1>Weather</h1>
-        <input id="latitude" placeholder="Latitude?" autofocus>
-        <input id="longitude" placeholder="Longitude?" autofocus>
+        <input id="latitude-input" placeholder="Latitude?" value="47.6097" autofocus>
+        <input id="longitude-input" placeholder="Longitude?" value="-122.3331">
       </header>
       <section id="forecast">
+        <ul id="forecast-list"></ul>
       </section>
       <footer id="footer"></footer>
     </section>
+
+
+    <!-- Templates -->
+
+    <script type="text/template" id="forecast-template">
+      <div class="view">
+        <label><%- longitude %></label>
+        <label><%- latitude %></label>
+      </div>
+    </script>
 
   </body>
 </html>
