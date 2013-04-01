@@ -3,6 +3,8 @@ Weather
 
 Weather forecast - side-project for experimenting with JavaScript frameworks
 
+This is in-progress, and not yet functional.
+
 Building:
 
 1. Install node: http://nodejs.org/download/
