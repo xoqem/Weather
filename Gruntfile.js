@@ -6,7 +6,7 @@ module.exports = function(grunt) {
     meta: {
       version: '<%= pkg.version %>',
       banner_text: 'Weather v<%= meta.version %> - ' +
-        'https://github.com/sinfree/Weather - <%= grunt.template.today("isoDateTime") %>',
+        'https://github.com/xoqem/Weather - <%= grunt.template.today("isoDateTime") %>',
       banner: '/* <%= meta.banner_text %> */\n',
       html_banner: '<!-- <%= meta.banner_text %> -->\n'
     },
