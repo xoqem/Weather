@@ -39,8 +39,17 @@ module.exports = function(grunt) {
       },
       js: {
         options: {
-          banner: '<%= meta.banner %>\n$(function () {\n"use strict";\n',
-          footer: '\nnew app.AppView();\n});\n'
+          banner: [
+            '<%= meta.banner %>',
+            '$(function () {',
+            '"use strict";',
+            ''
+          ].join('\n'),
+          footer: [
+            '',
+            'new app.AppView();',
+            '});'
+          ].join('\n')
         },
         src: ['js/**/*.js'],
         dest: 'tmp/debug/main.js'
