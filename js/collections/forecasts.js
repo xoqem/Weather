@@ -1,5 +1,3 @@
-(function () {
-  'use strict';
 
   var ForecastList = Backbone.Collection.extend({
     model: function(attrs, options) {
@@ -19,4 +17,4 @@
   });
 
   app.Forecasts = new ForecastList();
-})();
+

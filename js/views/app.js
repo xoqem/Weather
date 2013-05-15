@@ -1,12 +1,9 @@
-$(function ($) {
-  'use strict';
-
   app.AppView = Backbone.View.extend({
 
-    el: '#weatherapp',
+    el: 'body',
+    template: _.template($('#app-template').html()),
 
-    latitudeInput: null,
-    longitudeInput: null,
+    apiKey: 'efd1475503c090acf47ce7bdfff61941',
 
     events: {
       'keypress #latitude-input': 'locationInput_keypressHandler',
@@ -14,42 +11,56 @@ $(function ($) {
     },
 
     initialize: function () {
-      this.latitudeInput = this.$('#latitude-input');
-      this.longitudeInput = this.$('#longitude-input');
-
       this.listenTo(app.Forecasts, 'add', this.forecasts_addHandler);
+      this.render();
     },
 
     render: function () {
-      // TODO: refresh forecast list
+      this.$el.html(this.template());
     },
 
     forecasts_addHandler: function (forecast) {
+      console.log('forecasts_addHandler');
       var view = new app.ForecastView({ model: forecast });
-      $('#forecast-list').append(view.render().el);
+      this.$('#forecast-list').append(view.render().el);
     },
 
     locationInput_keypressHandler: function (e) {
-      if (e.which !== ENTER_KEY ||
-          !this.latitudeInput.val().trim() ||
-          !this.longitudeInput.val().trim()) {
+      var latitudeInput = this.$('#latitude-input');
+      var longitudeInput = this.$('#longitude-input');
+      var latitude = latitudeInput.val().trim();
+      var longitude = longitudeInput.val().trim();
+
+      if (e.which !== ENTER_KEY || !latitude || !longitude) {
         return;
       }
 
-      // TODO: Trigger new forecast request from app.Forecasts and remove test code below
-      app.Forecasts.create(
-        {
-          latitude: this.latitudeInput.val().trim(),
-          longitude: this.longitudeInput.val().trim()
+      var url = [
+        'https://api.forecast.io/forecast/',
+        this.apiKey,
+        '/',
+        latitude,
+        ',',
+        longitude
+      ].join('');
+      console.log('url:', url);
+
+      $.ajax({
+        dataType: "jsonp",
+        url: url,
+        success: function(result, status, xhr) {
+          app.Forecasts.create({
+            latitude: result.latitude,
+            longitude: result.longitude,
+            temperature: result.currently.temperature
+          });
+        },
+        error: function(xhr, status, error) {
+          // TODO: show error message
+        },
+        complete: function(xhr, status) {
+          // TODO: remove loading indicator
         }
-      );
-
-      // TODO: show some loading indicator while forecast is fetched
-
-      this.latitudeInput.val('');
-      this.longitudeInput.val('');
+      });
     }
   });
-
-  new app.AppView();
-});

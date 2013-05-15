@@ -1,5 +1,3 @@
-$(function () {
-  'use strict';
 
   app.ForecastView = Backbone.View.extend({
     tagName:  'li',
@@ -16,4 +14,3 @@ $(function () {
       return this;
     }
   });
-});
