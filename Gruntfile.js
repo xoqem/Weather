@@ -122,11 +122,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   // default task
-  grunt.registerTask('default', ['clean', 'jshint', 'concat', 'copy', 'uglify', 'cssmin', 'compress', 'sleep']);
+  grunt.registerTask('default', ['clean', 'jshint', 'concat', 'copy', 'uglify', 'cssmin', 'compress']);
   grunt.registerTask('test', []);
-
-  // HACK: add sleep task that we call after compress, because grunt compress plugin is saying its done before the compress completes
-  grunt.registerTask('sleep', function() {
-    setTimeout(this.async(), 2000);
-  });
 };
