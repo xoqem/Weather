@@ -1,12 +1,13 @@
 define([
-  "jquery",
-  "underscore",
-  "backbone"
-], function($, _, Backbone) {
+  'jquery',
+  'underscore',
+  'backbone',
+  'text!templates/forecast.tpl'
+], function($, _, Backbone, forecastTemplate) {
   return Backbone.View.extend({
     tagName:  'li',
 
-    template: _.template($('#forecast-template').html()),
+    template: _.template(forecastTemplate),
 
     initialize: function () {
       this.listenTo(this.model, 'change', this.render);

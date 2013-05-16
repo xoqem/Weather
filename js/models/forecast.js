@@ -1,7 +1,7 @@
 define([
-  "underscore",
-  "backbone"
-], function(u, b) {
+  'underscore',
+  'backbone'
+], function(_, Backbone) {
   return Backbone.Model.extend({
     defaults: {
       latitude: 47.6097,

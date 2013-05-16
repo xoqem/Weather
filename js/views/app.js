@@ -3,12 +3,13 @@ define([
   'underscore',
   'backbone',
   'views/forecast',
-  'collections/forecasts'
-], function($, _, Backbone, ForecastView, ForecastCollection) {
+  'collections/forecasts',
+  'text!templates/app.tpl'
+], function($, _, Backbone, ForecastView, ForecastCollection, appTemplate) {
   return Backbone.View.extend({
 
     el: 'body',
-    template: _.template($('#app-template').html()),
+    template: _.template(appTemplate),
 
     apiKey: 'efd1475503c090acf47ce7bdfff61941',
 
