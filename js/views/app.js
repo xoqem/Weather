@@ -1,66 +1,76 @@
-app.AppView = Backbone.View.extend({
+define([
+  'jquery',
+  'underscore',
+  'backbone',
+  'views/forecast',
+  'collections/forecasts'
+], function($, _, Backbone, ForecastView, ForecastCollection) {
+  return Backbone.View.extend({
 
-  el: 'body',
-  template: _.template($('#app-template').html()),
+    el: 'body',
+    template: _.template($('#app-template').html()),
 
-  apiKey: 'efd1475503c090acf47ce7bdfff61941',
+    apiKey: 'efd1475503c090acf47ce7bdfff61941',
 
-  events: {
-    'keypress #latitude-input': 'locationInput_keypressHandler',
-    'keypress #longitude-input': 'locationInput_keypressHandler'
-  },
+    forecastCollection: new ForecastCollection(),
 
-  initialize: function () {
-    this.listenTo(app.Forecasts, 'add', this.forecasts_addHandler);
-    this.render();
-  },
+    events: {
+      'keypress #latitude-input': 'locationInput_keypressHandler',
+      'keypress #longitude-input': 'locationInput_keypressHandler'
+    },
 
-  render: function () {
-    this.$el.html(this.template());
-  },
+    initialize: function () {
+      this.listenTo(this.forecastCollection, 'add', this.forecastCollection_addHandler);
+      this.render();
+    },
 
-  forecasts_addHandler: function (forecast) {
-    console.log('forecasts_addHandler');
-    var view = new app.ForecastView({ model: forecast });
-    this.$('#forecast-list').append(view.render().el);
-  },
+    render: function () {
+      this.$el.html(this.template());
+    },
 
-  locationInput_keypressHandler: function (e) {
-    var latitudeInput = this.$('#latitude-input');
-    var longitudeInput = this.$('#longitude-input');
-    var latitude = latitudeInput.val().trim();
-    var longitude = longitudeInput.val().trim();
+    forecastCollection_addHandler: function (forecast) {
+      var view = new ForecastView({ model: forecast });
+      this.$('#forecast-list').append(view.render().el);
+    },
 
-    if (e.which !== ENTER_KEY || !latitude || !longitude) {
-      return;
-    }
+    locationInput_keypressHandler: function (e) {
+      var latitudeInput = this.$('#latitude-input');
+      var longitudeInput = this.$('#longitude-input');
+      var latitude = latitudeInput.val().trim();
+      var longitude = longitudeInput.val().trim();
 
-    var url = [
-      'https://api.forecast.io/forecast/',
-      this.apiKey,
-      '/',
-      latitude,
-      ',',
-      longitude
-    ].join('');
-    console.log('url:', url);
-
-    $.ajax({
-      dataType: "jsonp",
-      url: url,
-      success: function(result, status, xhr) {
-        app.Forecasts.create({
-          latitude: result.latitude,
-          longitude: result.longitude,
-          temperature: result.currently.temperature
-        });
-      },
-      error: function(xhr, status, error) {
-        // TODO: show error message
-      },
-      complete: function(xhr, status) {
-        // TODO: remove loading indicator
+      if (e.which !== 13 || !latitude || !longitude) {
+        return;
       }
-    });
-  }
+
+      var url = [
+        'https://api.forecast.io/forecast/',
+        this.apiKey,
+        '/',
+        latitude,
+        ',',
+        longitude
+      ].join('');
+      console.log('url:', url);
+
+      me = this;
+      $.ajax({
+        dataType: "jsonp",
+        url: url,
+        success: function(result, status, xhr) {
+          me.forecastCollection.create({
+            latitude: result.latitude,
+            longitude: result.longitude,
+            temperature: result.currently.temperature
+          });
+        },
+        error: function(xhr, status, error) {
+          // TODO: show error message
+        },
+        complete: function(xhr, status) {
+          // TODO: remove loading indicator
+        }
+      });
+    }
+  });
 });
