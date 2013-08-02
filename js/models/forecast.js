@@ -12,7 +12,7 @@ define([
     urlRoot: function() {
       return [
         'https://api.forecast.io/forecast',
-        apiConfig.apiKey
+        apiConfig.forecastIoApiKey
       ].join('/');
     },
 

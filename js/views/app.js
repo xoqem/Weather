@@ -5,14 +5,18 @@ define([
   'models/forecast',
   'views/forecast',
   'collections/forecasts',
+  'collections/geoNamesSearchResults',
   'text!templates/app.tpl'
-], function($, _, Backbone, ForecastModel, ForecastView, ForecastCollection, appTemplate) {
+], function($, _, Backbone, ForecastModel, ForecastView, ForecastCollection, GeoNamesSearchResultsCollection,
+  appTemplate) {
+
   return Backbone.View.extend({
 
     el: 'body',
     template: _.template(appTemplate),
 
     forecastCollection: new ForecastCollection(),
+    geoNamesSearchResultsCollection: new GeoNamesSearchResultsCollection(),
 
     events: {
       'keypress #latitude-input': 'locationInput_keypressHandler',

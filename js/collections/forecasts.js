@@ -1,8 +1,7 @@
 define([
-  'underscore',
   'backbone',
   'models/forecast'
-], function(_, Backbone, ForecastModel) {
+], function(Backbone, ForecastModel) {
   return Backbone.Collection.extend({
     model: ForecastModel,
 
