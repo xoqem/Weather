@@ -7,9 +7,8 @@ define([
   return Backbone.Collection.extend({
     model: GeoNameSearchResultModel,
 
-    search: function(q) {
+    setSearchQuery: function(q) {
       this._query = q;
-      this.fetch();
     },
 
     url: function() {
@@ -25,6 +24,10 @@ define([
         'http://api.geonames.org/searchJSON',
         params
       ].join('?');
+    },
+
+    parse: function(response) {
+      return response.geonames;
     }
   });
 });

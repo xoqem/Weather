@@ -19,8 +19,7 @@ define([
     geoNamesSearchResultsCollection: new GeoNamesSearchResultsCollection(),
 
     events: {
-      'keypress #latitude-input': 'locationInput_keypressHandler',
-      'keypress #longitude-input': 'locationInput_keypressHandler'
+      'keypress #location-input': 'locationInput_keypressHandler'
     },
 
     initialize: function () {
@@ -38,24 +37,29 @@ define([
     },
 
     locationInput_keypressHandler: function (e) {
-      var latitudeInput = this.$('#latitude-input');
-      var longitudeInput = this.$('#longitude-input');
-      var latitude = latitudeInput.val().trim();
-      var longitude = longitudeInput.val().trim();
+      var location = this.$('#location-input').val().trim();
 
-      if (e.which !== 13 || !latitude || !longitude) {
+      if (e.which !== 13 || !location) {
         return;
       }
 
-      var forecastModel = new ForecastModel({
-        latitude: latitude,
-        longitude: longitude
-      });
-      this.forecastCollection.push(forecastModel);
+      this.geoNamesSearchResultsCollection.setSearchQuery(location);
+      this.geoNamesSearchResultsCollection.fetch({
+        success: _.bind(function() {
+          var model = this.geoNamesSearchResultsCollection.first();
+          if (!model) return;
 
-      // fetch with data type jsonp to workaround same origin issues
-      forecastModel.fetch({
-        dataType: 'jsonp'
+          var forecastModel = new ForecastModel({
+            latitude: model.get('lat'),
+            longitude: model.get('lng')
+          });
+          this.forecastCollection.push(forecastModel);
+
+          // fetch with data type jsonp to workaround same origin issues
+          forecastModel.fetch({
+            dataType: 'jsonp'
+          });
+        }, this)
       });
     }
   });
