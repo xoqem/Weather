@@ -12,8 +12,6 @@ define([
     el: 'body',
     template: _.template(appTemplate),
 
-    apiKey: 'efd1475503c090acf47ce7bdfff61941',
-
     forecastCollection: new ForecastCollection(),
 
     events: {
@@ -45,35 +43,15 @@ define([
         return;
       }
 
-      var url = [
-        'https://api.forecast.io/forecast/',
-        this.apiKey,
-        '/',
-        latitude,
-        ',',
-        longitude
-      ].join('');
-      console.log('url:', url);
+      var forecastModel = new ForecastModel({
+        latitude: latitude,
+        longitude: longitude
+      });
+      this.forecastCollection.push(forecastModel);
 
-      me = this;
-      $.ajax({
-        dataType: "jsonp",
-        url: url,
-        success: function(result, status, xhr) {
-          me.forecastCollection.push(
-            new ForecastModel({
-              latitude: result.latitude,
-              longitude: result.longitude,
-              temperature: result.currently.temperature
-            })
-          );
-        },
-        error: function(xhr, status, error) {
-          // TODO: show error message
-        },
-        complete: function(xhr, status) {
-          // TODO: remove loading indicator
-        }
+      // fetch with data type jsonp to workaround same origin issues
+      forecastModel.fetch({
+        dataType: 'jsonp'
       });
     }
   });
