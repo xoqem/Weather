@@ -2,10 +2,11 @@ define([
   'jquery',
   'underscore',
   'backbone',
+  'models/forecast',
   'views/forecast',
   'collections/forecasts',
   'text!templates/app.tpl'
-], function($, _, Backbone, ForecastView, ForecastCollection, appTemplate) {
+], function($, _, Backbone, ForecastModel, ForecastView, ForecastCollection, appTemplate) {
   return Backbone.View.extend({
 
     el: 'body',
@@ -59,11 +60,13 @@ define([
         dataType: "jsonp",
         url: url,
         success: function(result, status, xhr) {
-          me.forecastCollection.create({
-            latitude: result.latitude,
-            longitude: result.longitude,
-            temperature: result.currently.temperature
-          });
+          me.forecastCollection.push(
+            new ForecastModel({
+              latitude: result.latitude,
+              longitude: result.longitude,
+              temperature: result.currently.temperature
+            })
+          );
         },
         error: function(xhr, status, error) {
           // TODO: show error message
