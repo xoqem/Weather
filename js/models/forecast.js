@@ -10,10 +10,6 @@ define([
     },
 
     urlRoot: function() {
-      console.log('urlRoot', [
-        'https://api.forecast.io/forecast',
-        apiConfig.apiKey
-      ].join('/'));
       return [
         'https://api.forecast.io/forecast',
         apiConfig.apiKey
