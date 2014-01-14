@@ -9,6 +9,8 @@ define([
       currently: {}
     },
 
+    label: '',
+
     urlRoot: function() {
       return [
         'https://api.forecast.io/forecast',
@@ -18,6 +20,8 @@ define([
 
     initialize: function(attrs, options) {
       Backbone.Model.prototype.initialize(this, arguments);
+
+      this.label = attrs.label;
 
       this.set('id', [
         attrs.latitude,

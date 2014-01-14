@@ -51,7 +51,12 @@ define([
 
           var forecastModel = new ForecastModel({
             latitude: model.get('lat'),
-            longitude: model.get('lng')
+            longitude: model.get('lng'),
+            label: [
+              model.get('name'),
+              model.get('adminName1'),
+              model.get('countryName')
+            ].join(', ')
           });
           this.forecastCollection.push(forecastModel);
 
