@@ -19,7 +19,8 @@ define([
     geoNamesSearchResultsCollection: new GeoNamesSearchResultsCollection(),
 
     events: {
-      'keypress #location-input': 'locationInput_keypressHandler'
+      'keypress #location-input': 'locationInput_keypressHandler',
+      'click #search-button': 'locationSearch'
     },
 
     initialize: function () {
@@ -37,9 +38,17 @@ define([
     },
 
     locationInput_keypressHandler: function (e) {
+      if (e.which !== 13) {
+        return;
+      }
+
+      this.locationSearch();
+    },
+
+    locationSearch: function() {
       var location = this.$('#location-input').val().trim();
 
-      if (e.which !== 13 || !location) {
+      if (!location) {
         return;
       }
 
