@@ -1,11 +1,28 @@
-(function () {
-  'use strict';
+define([
+  'underscore',
+  'backbone',
+  'configs/api'
+], function(_, Backbone, apiConfig) {
+  return Backbone.Model.extend({
 
-  app.Forecast = Backbone.Model.extend({
     defaults: {
-      latitude: 47.6097,
-      longitude: -122.3331
+      currently: {}
+    },
+
+    urlRoot: function() {
+      return [
+        'https://api.forecast.io/forecast',
+        apiConfig.forecastIoApiKey
+      ].join('/');
+    },
+
+    initialize: function(attrs, options) {
+      Backbone.Model.prototype.initialize(this, arguments);
+
+      this.set('id', [
+        attrs.latitude,
+        attrs.longitude
+      ].join(','));
     }
   });
-
-})();
+});

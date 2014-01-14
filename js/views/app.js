@@ -1,55 +1,66 @@
-$(function ($) {
-  'use strict';
+define([
+  'jquery',
+  'underscore',
+  'backbone',
+  'models/forecast',
+  'views/forecast',
+  'collections/forecasts',
+  'collections/geoNamesSearchResults',
+  'text!templates/app.tpl'
+], function($, _, Backbone, ForecastModel, ForecastView, ForecastCollection, GeoNamesSearchResultsCollection,
+  appTemplate) {
 
-  app.AppView = Backbone.View.extend({
+  return Backbone.View.extend({
 
-    el: '#weatherapp',
+    el: 'body',
+    template: _.template(appTemplate),
 
-    latitudeInput: null,
-    longitudeInput: null,
+    forecastCollection: new ForecastCollection(),
+    geoNamesSearchResultsCollection: new GeoNamesSearchResultsCollection(),
 
     events: {
-      'keypress #latitude-input': 'locationInput_keypressHandler',
-      'keypress #longitude-input': 'locationInput_keypressHandler'
+      'keypress #location-input': 'locationInput_keypressHandler'
     },
 
     initialize: function () {
-      this.latitudeInput = this.$('#latitude-input');
-      this.longitudeInput = this.$('#longitude-input');
-
-      this.listenTo(app.Forecasts, 'add', this.forecasts_addHandler);
+      this.listenTo(this.forecastCollection, 'add', this.forecastCollection_addHandler);
+      this.render();
     },
 
     render: function () {
-      // TODO: refresh forecast list
+      this.$el.html(this.template());
     },
 
-    forecasts_addHandler: function (forecast) {
-      var view = new app.ForecastView({ model: forecast });
-      $('#forecast-list').append(view.render().el);
+    forecastCollection_addHandler: function (forecast) {
+      var view = new ForecastView({ model: forecast });
+      this.$('#forecast-list').append(view.render().el);
     },
 
     locationInput_keypressHandler: function (e) {
-      if (e.which !== ENTER_KEY ||
-          !this.latitudeInput.val().trim() ||
-          !this.longitudeInput.val().trim()) {
+      var location = this.$('#location-input').val().trim();
+
+      if (e.which !== 13 || !location) {
         return;
       }
 
-      // TODO: Trigger new forecast request from app.Forecasts and remove test code below
-      app.Forecasts.create(
-        {
-          latitude: this.latitudeInput.val().trim(),
-          longitude: this.longitudeInput.val().trim()
-        }
-      );
+      this.geoNamesSearchResultsCollection.setSearchQuery(location);
+      this.geoNamesSearchResultsCollection.fetch({
+        success: _.bind(function() {
+          var model = this.geoNamesSearchResultsCollection.first();
+          if (!model) return;
 
-      // TODO: show some loading indicator while forecast is fetched
+          var forecastModel = new ForecastModel({
+            latitude: model.get('lat'),
+            longitude: model.get('lng')
+          });
+          this.forecastCollection.push(forecastModel);
 
-      this.latitudeInput.val('');
-      this.longitudeInput.val('');
+          // fetch with data type jsonp to workaround same origin issues
+          forecastModel.fetch({
+            dataType: 'jsonp'
+          });
+        }, this)
+      });
     }
   });
-
-  new app.AppView();
 });

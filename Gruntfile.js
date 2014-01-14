@@ -6,7 +6,7 @@ module.exports = function(grunt) {
     meta: {
       version: '<%= pkg.version %>',
       banner_text: 'Weather v<%= meta.version %> - ' +
-        'https://github.com/sinfree/Weather - <%= grunt.template.today("isoDateTime") %>',
+        'https://github.com/xoqem/Weather - <%= grunt.template.today("isoDateTime") %>',
       banner: '/* <%= meta.banner_text %> */\n',
       html_banner: '<!-- <%= meta.banner_text %> -->\n'
     },
@@ -17,7 +17,7 @@ module.exports = function(grunt) {
           archive: 'dist/debug.tar.gz'
         },
         files: [
-          {expand: true, cwd: 'tmp/debug', src: ['*'], dest: '<%= pkg.name %>-<%= meta.version %>'}
+          {expand: true, cwd: 'tmp/debug', src: ['**/*'], dest: '<%= pkg.name %>-<%= meta.version %>'}
         ]
       },
       release: {
@@ -25,7 +25,7 @@ module.exports = function(grunt) {
           archive: 'dist/release.tar.gz'
         },
         files: [
-          {expand: true, cwd: 'tmp/release', src: ['*'], dest: '<%= pkg.name %>-<%= meta.version %>'}
+          {expand: true, cwd: 'tmp/release', src: ['**/*'], dest: '<%= pkg.name %>-<%= meta.version %>'}
         ]
       }
     },
@@ -35,20 +35,13 @@ module.exports = function(grunt) {
           banner: '<%= meta.banner %>'
         },
         src: ['css/**/*.css'],
-        dest: 'tmp/debug/styles.css'
-      },
-      js: {
-        options: {
-          banner: '<%= meta.banner %>'
-        },
-        src: ['js/**/*.js'],
-        dest: 'tmp/debug/main.js'
+        dest: 'tmp/debug/css/styles.css'
       },
       index: {
         options: {
           banner: '<%= meta.html_banner %>'
         },
-        src: ['html/index.html'],
+        src: ['index.html'],
         dest: 'tmp/debug/index.html'
       }
     },
@@ -56,6 +49,16 @@ module.exports = function(grunt) {
       images: {
         files: [
           {expand: true, cwd: 'images', src: ['**'], dest: 'tmp/debug/images/'}
+        ]
+      },
+      js: {
+        files: [
+          {expand: true, cwd: 'js', src: ['**'], dest: 'tmp/debug/js/'}
+        ]
+      },
+      templates: {
+        files: [
+          {expand: true, cwd: 'templates', src: ['**'], dest: 'tmp/debug/templates/'}
         ]
       },
       release: {
@@ -72,20 +75,18 @@ module.exports = function(grunt) {
       }
     },
     uglify: {
-      options: {
-        banner: '<%= meta.banner %>'
-      },
-      dist: {
-        files: {
-          'tmp/release/main.js': ['tmp/release/main.js']
-        }
+      release: {
+        files: [
+          {
+            expand: true,
+            cwd: 'tmp/release/js/',
+            src: ['**/*.js'],
+            dest: 'tmp/release/js/'
+          }
+        ]
       }
     },
     watch: {
-      js: {
-        files: 'js/**/*.js',
-        tasks: ['jshint', 'concat:js']
-      },
       css: {
         files: 'css/**/*.css',
         tasks: ['concat:css']
@@ -97,6 +98,14 @@ module.exports = function(grunt) {
       images: {
         files: 'images/**',
         tasks: ['copy:images']
+      },
+      js: {
+        files: 'js/**/*.js',
+        tasks: ['jshint', 'copy:js']
+      },
+      templates: {
+        files: 'templates/**/*.tpl',
+        tasks: ['copy:templates']
       }
     },
     jshint: {
@@ -122,11 +131,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   // default task
-  grunt.registerTask('default', ['clean', 'jshint', 'concat', 'copy', 'uglify', 'cssmin', 'compress', 'sleep']);
+  grunt.registerTask('default', ['clean', 'jshint', 'concat', 'copy', 'uglify', 'cssmin', 'compress']);
   grunt.registerTask('test', []);
-
-  // HACK: add sleep task that we call after compress, because grunt compress plugin is saying its done before the compress completes
-  grunt.registerTask('sleep', function() {
-    setTimeout(this.async(), 2000);
-  });
 };
