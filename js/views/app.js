@@ -24,7 +24,7 @@ define([
     },
 
     initialize: function () {
-      this.listenTo(this.forecastCollection, 'add', this.forecastCollection_addHandler);
+      this.forecastCollection.on('add', this.forecastCollection_addHandler, this);
       this.render();
     },
 
