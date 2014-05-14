@@ -51,6 +51,11 @@ module.exports = function(grunt) {
           {expand: true, cwd: 'images', src: ['**'], dest: 'tmp/debug/images/'}
         ]
       },
+      libs: {
+        files: [
+          {expand: true, cwd: 'libs', src: ['**'], dest: 'tmp/debug/libs/'}
+        ]
+      },
       js: {
         files: [
           {expand: true, cwd: 'js', src: ['**'], dest: 'tmp/debug/js/'}
@@ -70,7 +75,7 @@ module.exports = function(grunt) {
     cssmin: {
       release: {
         files: {
-          "tmp/release/styles.css": ["tmp/release/styles.css"]
+          "tmp/release/css/styles.css": ["tmp/release/css/styles.css"]
         }
       }
     },
