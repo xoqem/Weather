@@ -30,12 +30,12 @@ module.exports = function(grunt) {
       }
     },
     concat: {
-      css: {
+      less: {
         options: {
           banner: '<%= meta.banner %>'
         },
-        src: ['css/**/*.css'],
-        dest: 'tmp/debug/css/styles.css'
+        src: ['less/**/*.less'],
+        dest: 'tmp/debug/less/styles.less'
       },
       index: {
         options: {
@@ -92,9 +92,9 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      css: {
-        files: 'css/**/*.css',
-        tasks: ['concat:css']
+      less: {
+        files: 'less/**/*.less',
+        tasks: ['concat:less']
       },
       html: {
         files: 'html/**/*.html',
